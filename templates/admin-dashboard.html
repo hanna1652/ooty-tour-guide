@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Ooty Feeds</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{ background:#f6f2e9; font-family:'Outfit',sans-serif; }
+    .sidebar{
+      background:#1f3a2e;
+      min-height:100vh;
+      padding:30px 20px;
+      position:fixed;
+      width:240px;
+    }
+    .sidebar h2{
+      color:#c9a05c;
+      font-size:1.2rem;
+      font-family:Georgia,serif;
+      margin-bottom:8px;
+    }
+    .sidebar p{
+      color:#aec2af;
+      font-size:0.78rem;
+      margin-bottom:30px;
+    }
+    .sidebar a{
+      display:block;
+      color:#f6f2e9;
+      text-decoration:none;
+      padding:10px 14px;
+      border-radius:8px;
+      margin-bottom:6px;
+      font-size:0.92rem;
+      transition:background 0.2s;
+    }
+    .sidebar a:hover{ background:rgba(246,242,233,0.1); }
+    .sidebar a.active{ background:rgba(201,160,92,0.2); color:#c9a05c; }
+    .sidebar .logout{
+      margin-top:40px;
+      color:#e88;
+    }
+    .sidebar .logout:hover{ background:rgba(255,100,100,0.1); }
+    .main-content{
+      margin-left:240px;
+      padding:40px;
+    }
+    .dash-card{
+      background:#fff;
+      border-radius:14px;
+      padding:28px;
+      text-align:center;
+      border:1px solid rgba(31,58,46,0.08);
+      transition:transform 0.2s;
+      text-decoration:none;
+      display:block;
+      color:#1c2420;
+    }
+    .dash-card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 12px 28px rgba(31,58,46,0.1);
+      color:#1c2420;
+    }
+    .dash-icon{ font-size:2.4rem; margin-bottom:12px; }
+    .dash-card h4{ font-family:Georgia,serif; font-size:1.1rem; margin-bottom:6px; }
+    .dash-card p{ font-size:0.85rem; color:#5a6a5e; margin:0; }
+    .page-title{ font-family:Georgia,serif; color:#142720; margin-bottom:8px; }
+    .page-sub{ color:#5a6a5e; font-size:0.95rem; margin-bottom:36px; }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>🌿 Ooty Feeds</h2>
+    <p>Admin Panel</p>
+    <a href="/admin/dashboard" class="active">🏠 Dashboard</a>
+    <a href="/admin/destinations">📍 Destinations</a>
+    <a href="/admin/hotels">🏨 Hotels & Resorts</a>
+    <a href="/admin/reviews">⭐ Reviews</a>
+    <a href="/admin/messages">📩 Messages</a>
+    <a href="/admin/contact">📞 Contact Info</a>
+    <a href="/admin/settings">⚙️ Account Settings</a>
+    <a href="/admin/logout" style="color: #ef4444; margin-top: 20px;">🚪 Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2 class="page-title">Welcome back, Admin 👋</h2>
+    <p class="page-sub">Manage your Ooty Feeds website from here.</p>
+
+    <div class="row g-4">
+      <div class="col-md-3">
+        <a href="/admin/destinations" class="dash-card">
+          <div class="dash-icon">📍</div>
+          <h4>Destinations</h4>
+          <p>Add & manage places</p>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/admin/hotels" class="dash-card">
+          <div class="dash-icon">🏨</div>
+          <h4>Hotels & Resorts</h4>
+          <p>Manage stay listings</p>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/admin/reviews" class="dash-card">
+          <div class="dash-icon">⭐</div>
+          <h4>Reviews</h4>
+          <p>View & manage reviews</p>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/admin/messages" class="dash-card">
+          <div class="dash-icon">📩</div>
+          <h4>Messages</h4>
+          <p>View contact messages</p>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/admin/contact" class="dash-card">
+          <div class="dash-icon">📞</div>
+          <h4>Contact Info</h4>
+          <p>Edit contact details & WhatsApp</p>
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="/admin/settings" class="dash-card">
+          <div class="dash-icon">⚙️</div>
+          <h4>Settings</h4>
+          <p>Account credentials</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

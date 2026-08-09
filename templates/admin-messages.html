@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages — Ooty Feeds Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{ background:#f6f2e9; font-family:'Outfit',sans-serif; }
+    .sidebar{
+      background:#1f3a2e;
+      min-height:100vh;
+      padding:30px 20px;
+      position:fixed;
+      width:240px;
+    }
+    .sidebar h2{ color:#c9a05c; font-size:1.2rem; font-family:Georgia,serif; margin-bottom:8px; }
+    .sidebar p{ color:#aec2af; font-size:0.78rem; margin-bottom:30px; }
+    .sidebar a{ display:block; color:#f6f2e9; text-decoration:none; padding:10px 14px; border-radius:8px; margin-bottom:6px; font-size:0.92rem; transition:background 0.2s; }
+    .sidebar a:hover{ background:rgba(246,242,233,0.1); }
+    .sidebar a.active{ background:rgba(201,160,92,0.2); color:#c9a05c; }
+    .sidebar .logout{ margin-top:40px; color:#e88; }
+    .sidebar .logout:hover{ background:rgba(255,100,100,0.1); }
+    .main-content{ margin-left:240px; padding:40px; }
+    .page-title{ font-family:Georgia,serif; color:#142720; margin-bottom:8px; }
+    .page-sub{ color:#5a6a5e; font-size:0.95rem; margin-bottom:36px; }
+    .message-card{
+      background:#fff;
+      border-radius:12px;
+      padding:24px;
+      margin-bottom:16px;
+      border:1px solid rgba(31,58,46,0.08);
+      box-shadow:0 2px 12px rgba(31,58,46,0.06);
+    }
+    .message-card .name{ font-family:Georgia,serif; font-size:1.1rem; color:#142720; margin-bottom:4px; }
+    .message-card .contact-info{ font-size:0.85rem; color:#5a6a5e; margin-bottom:12px; }
+    .message-card .contact-info span{ margin-right:16px; }
+    .message-card .msg-text{ color:#1c2420; font-size:0.95rem; line-height:1.6; background:#f6f2e9; padding:12px 16px; border-radius:8px; }
+    .message-card .date{ font-size:0.78rem; color:#aaa; margin-top:10px; }
+    .no-messages{ text-align:center; padding:60px; color:#5a6a5e; }
+    .no-messages .icon{ font-size:3rem; margin-bottom:16px; }
+    .whatsapp-btn{
+      display:inline-block;
+      background:#25d366;
+      color:#fff;
+      padding:8px 18px;
+      border-radius:999px;
+      text-decoration:none;
+      font-size:0.82rem;
+      font-weight:500;
+      margin-top:10px;
+    }
+    .whatsapp-btn:hover{ background:#1fb855; color:#fff; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>🌿 Ooty Feeds</h2>
+    <p>Admin Panel</p>
+    <a href="/admin/dashboard">🏠 Dashboard</a>
+    <a href="/admin/destinations">📍 Destinations</a>
+    <a href="/admin/hotels">🏨 Hotels & Resorts</a>
+    <a href="/admin/reviews">⭐ Reviews</a>
+    <a href="/admin/messages" class="active">📩 Messages</a>
+    <a href="/admin/settings">⚙️ Account Settings</a>
+    <a href="/admin/logout" style="color: #ef4444; margin-top: 20px;">🚪 Logout</a>
+  </div>
+
+  <div class="main-content">
+    <h2 class="page-title">📩 Contact Messages</h2>
+    <p class="page-sub">Messages sent by visitors from the contact form.</p>
+
+    {% if messages %}
+      {% for msg in messages %}
+      <div class="message-card">
+        <div class="name">{{ msg.name }}</div>
+        <div class="contact-info">
+          <span>📱 {{ msg.phone }}</span>
+          <span>✉️ {{ msg.email }}</span>
+        </div>
+        <div class="msg-text">{{ msg.message }}</div>
+        <div class="date">📅 {{ msg.date }}</div>
+        <a href="https://api.whatsapp.com/send?phone={{ msg.phone|replace('+', '')|replace(' ', '')|replace('-', '') }}&text=Hi%20{{ msg.name|urlencode }}!%20This%20is%20Ooty%20Feeds%20responding%20to%20your%20enquiry." class="whatsapp-btn" target="_blank">💬 Reply on WhatsApp</a>
+      {% endfor %}
+    {% else %}
+      <div class="no-messages">
+        <div class="icon">📭</div>
+        <p>No messages yet. When visitors send a message, it will appear here.</p>
+      </div>
+    {% endif %}
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Misty Trails — Ooty Feeds</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <!-- Your CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+    <div class="container">
+
+      <!-- Logo -->
+      <a class="navbar-brand" href="#">
+        Ooty <span>Feeds</span>
+      </a>
+
+      <!-- Mobile hamburger button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Nav Links -->
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#discover">Visit Ooty</a></li>
+          <li class="nav-item"><a class="nav-link" href="#stay">Stay in Ooty</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+          <li class="nav-item">
+            <a class="nav-link nav-cta" href="#contact">Contact Us</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">The Nilgiris · Tamil Nadu</p>
+      <h1>Visit Ooty<br><em>one trail at a time</em></h1>
+      <p class="hero-sub">A local's guide to the lakes, tea trails, and misty viewpoints of the Queen of Hill Stations.</p>
+      <div class="hero-buttons">
+        <a href="#discover" class="btn-primary-custom">Visit Ooty</a>
+        <a href="#contact" class="btn-ghost-custom">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT OOTY (DYNAMIC DESTINATIONS GRID) -->
+  <section class="discover-section" id="discover">
+    <div class="container">
+
+      <!-- Section Header -->
+      <div class="section-header">
+        <p class="section-eyebrow">Visit Ooty</p>
+        <h2>The hill station, <em>one trail at a time</em></h2>
+        <p class="section-sub">Lakes wrapped in morning mist, tea estates that go on forever, and viewpoints the buses don't stop at.</p>
+      </div>
+
+      <!-- Places Grid -->
+      <div class="places-grid">
+        {% if destinations %}
+          {% for dest in destinations %}
+          <div class="place-card {% if dest.featured or loop.first %}featured{% endif %}">
+            <img src="{{ url_for('static', filename='images/' + (dest.image_filename if dest.image_filename else 'Estate1main.jpeg')) }}"
+                 alt="{{ dest.name }}"
+                 onerror="this.onerror=null; this.src='/static/images/Estate1main.jpeg';">
+            <div class="card-overlay">
+              <span class="place-tag">{{ dest.category }} {% if dest.featured %}⭐{% endif %}</span>
+              <h3>{{ dest.name }}</h3>
+              <div class="badge-row">
+                {% for badge in dest.badges %}
+                <span class="badge">{{ badge }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-5 w-100">
+            <p>No destinations found. Add your first destination through the admin panel!</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- See All Button -->
+      <div class="section-cta mt-4">
+        <a href="#contact" class="btn-forest">Plan Your Trip</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STAY IN OOTY SECTION -->
+  <section class="stay-section" id="stay">
+    <div class="container">
+
+      <div class="section-header">
+        <p class="section-eyebrow">Accommodation</p>
+        <h2>Stay in <em>Ooty</em></h2>
+        <p class="section-sub">From cozy homestays to luxury resorts — find the perfect place to wake up to misty Nilgiri mornings.</p>
+      </div>
+
+      <div class="stay-grid">
+        <div class="stay-card">
+          <img src="{{ url_for('static', filename='images/hotel1main.jpeg') }}" alt="Resorts in Ooty" class="stay-photo">
+          <div class="stay-card-content">
+            <h3>Hotels & Resorts</h3>
+            <p>Premium resorts and handpicked stays tucked away in Nilgiri greenery with tea estate and valley views.</p>
+            <button type="button" class="btn-enquire" data-bs-toggle="modal" data-bs-target="#resortsModal"><i class="bi bi-whatsapp"></i> View Stays ({{ hotels|length if hotels else 0 }})</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DYNAMIC RESORTS MODAL -->
+      <div class="modal fade" id="resortsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content stay-modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title">Hotels & Resorts in Ooty</h3>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+              {% if hotels %}
+              <div id="resortsCarousel" class="carousel slide" data-bs-ride="false">
+                <div class="carousel-inner">
+
+                  {% for hotel in hotels %}
+                  <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ url_for('static', filename='images/' + (hotel.image_filename if hotel.image_filename else 'hotel5.jpeg')) }}" 
+                         class="carousel-photo" 
+                         alt="{{ hotel.name }}"
+                         onerror="this.onerror=null; this.src='/static/images/hotel5.jpeg';">
+                    <div class="carousel-caption-custom">
+                      <div class="mb-1">
+                        <span class="badge bg-dark text-light me-1">{{ hotel.category }}</span>
+                        {% if hotel.rating %}<span class="badge bg-warning text-dark">⭐ {{ hotel.rating }}</span>{% endif %}
+                      </div>
+                      <h4>{{ hotel.name }}</h4>
+                      <p class="mb-1">{{ hotel.description }}</p>
+                      {% if hotel.price_range %}<p class="small text-warning fw-bold mb-2">💰 {{ hotel.price_range }}</p>{% endif %}
+                      <a href="https://api.whatsapp.com/send?phone={{ contact_info.whatsapp_number }}&text=Hi!%20I'm%20interested%20in%20booking%20{{ hotel.name|urlencode }}." class="btn-enquire" target="_blank" rel="noopener noreferrer"><i class="bi bi-whatsapp"></i> Enquire on WhatsApp</a>
+                    </div>
+                  </div>
+                  {% endfor %}
+
+                </div>
+
+                {% if hotels|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#resortsCarousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#resortsCarousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </button>
+                {% endif %}
+              </div>
+              {% else %}
+              <div class="text-center py-4">
+                <p>No resorts available at the moment. Please contact us directly for options!</p>
+              </div>
+              {% endif %}
+
+              <p class="listing-note mt-3">Don't see what you're looking for? <a href="https://api.whatsapp.com/send?phone={{ contact_info.whatsapp_number }}&text=Hi!%20I'm%20looking%20for%20a%20resort%20in%20Ooty." target="_blank" rel="noopener noreferrer">Ask me directly on WhatsApp</a>.</p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SERVICES SECTION -->
+  <section class="services-section" id="services">
+    <div class="container">
+
+      <div class="section-header">
+        <p class="section-eyebrow">What I Arrange For You</p>
+        <h2>Plan it <em>through your guide</em></h2>
+        <p class="section-sub">From the moment you land to the moment you leave — I handle the bookings, you enjoy the trip.</p>
+      </div>
+
+      <div class="services-grid">
+
+        <div class="service-card">
+          <div class="service-icon">🚗</div>
+          <h3>Cab Services</h3>
+          <p>Reliable local cabs for airport pickups, day trips, and full itinerary drives around Ooty.</p>
+          <a href="https://api.whatsapp.com/send?phone={{ contact_info.whatsapp_number }}&text=Hi!%20I'm%20interested%20in%20booking%20a%20Cab%20Service%20in%20Ooty." class="btn-enquire" target="_blank" rel="noopener noreferrer"><i class="bi bi-whatsapp"></i> Enquire</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-icon">🚂</div>
+          <h3>Toy Train Booking</h3>
+          <p>Skip the queue hassle — I'll arrange your Nilgiri Toy Train tickets in advance.</p>
+          <a href="https://api.whatsapp.com/send?phone={{ contact_info.whatsapp_number }}&text=Hi!%20I'm%20interested%20in%20booking%20Toy%20Train%20tickets%20in%20Ooty." class="btn-enquire" target="_blank" rel="noopener noreferrer"><i class="bi bi-whatsapp"></i> Enquire</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION MAP SECTION -->
+<section class="map-section" id="location">
+  <div class="container">
+
+    <div class="section-header">
+      <p class="section-eyebrow">Find Me</p>
+      <h2>Where to <em>find your guide</em></h2>
+      <p class="section-sub">Based right in the heart of Ooty — easy to reach for a quick chat or last-minute planning.</p>
+    </div>
+
+    <div class="map-wrapper" style="width: 100%; max-width: 100%; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+      <iframe 
+        src="https://www.google.com/maps?q=33+137/k/133,+Elk+Hill+Rd,+behind+Eye+Foundation,+Nondimedu,+Ooty,+Tamil+Nadu+643001&output=embed"
+        width="100%"
+        height="420" 
+        style="border:0; display:block;" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+
+  </div>
+</section>
+
+  <!-- CONTACT SECTION -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+
+      <div class="section-header">
+        <p class="section-eyebrow">Get In Touch</p>
+        <h2>Plan your trip <em>with a local</em></h2>
+        <p class="section-sub">Have questions about Ooty? Want help planning your visit? Send a message and I'll get back to you personally.</p>
+      </div>
+
+      <div class="contact-wrapper">
+
+        <!-- Contact Form -->
+        <div class="contact-form-box">
+          {% if success %}
+          <div class="success-msg">✅ Message sent! I'll get back to you soon.</div>
+          {% endif %}
+          {% if error %}
+          <div class="error-msg">❌ Something went wrong. Please try again.</div>
+          {% endif %}
+
+          <form method="POST" action="/contact">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" name="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" placeholder="+91 98765 43210" required>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" name="email" placeholder="john@email.com" required>
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea name="message" rows="4" placeholder="Tell me about your trip plans..." required></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Send Message 💬</button>
+          </form>
+        </div>
+
+        <!-- Contact Info (Dynamic) -->
+        <div class="contact-info-box">
+          <h3>Reach me directly</h3>
+          <div class="contact-item">
+            <span class="contact-icon">📱</span>
+            <div>
+              <p class="contact-label">WhatsApp & Call</p>
+              <a href="https://api.whatsapp.com/send?phone={{ contact_info.whatsapp_number }}&text={{ contact_info.whatsapp_message | urlencode }}" target="_blank" rel="noopener noreferrer">
+                {{ contact_info.phone_numbers }}
+              </a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <div>
+              <p class="contact-label">Location</p>
+              <p>{{ contact_info.location }}</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">🕐</span>
+            <div>
+              <p class="contact-label">Available</p>
+              <p>{{ contact_info.available_hours }}</p>
+            </div>
+          </div>
+          
+          <div class="mt-4">
+            <a href="https://api.whatsapp.com/send?phone={{ contact_info.whatsapp_number }}&text={{ contact_info.whatsapp_message | urlencode }}" class="btn-whatsapp" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS SECTION -->
+  <section id="reviews" class="container my-5">
+    <h2 class="text-center mb-4">What Visitors Say</h2>
+
+    <!-- Display Existing Reviews -->
+    <div class="row mb-5">
+      {% if reviews %}
+        {% for review in reviews %}
+        <div class="col-md-4 mb-3">
+          <div class="card h-100 shadow-sm p-3 border-0">
+            <div class="card-body">
+              <h5 class="card-title">{{ review.author }}</h5>
+              <div class="text-warning mb-2">
+                {% for i in range(review.rating) %}⭐{% endfor %}
+              </div>
+              <p class="card-text text-muted">"{{ review.comment }}"</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-center text-muted">No reviews yet. Be the first to leave one!</p>
+      {% endif %}
+    </div>
+
+    <!-- Submit Review Form -->
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow p-4 border-0">
+          <h4 class="mb-3 text-center">Leave a Review</h4>
+          <form action="/add-review" method="POST">
+            <div class="mb-3">
+              <label class="form-label">Your Name</label>
+              <input type="text" name="author" class="form-control" placeholder="John Doe" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Rating</label>
+              <select name="rating" class="form-select">
+                <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                <option value="3">⭐⭐⭐ (3/5)</option>
+                <option value="2">⭐⭐ (2/5)</option>
+                <option value="1">⭐ (1/5)</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Your Review</label>
+              <textarea name="comment" class="form-control" rows="3" placeholder="Share your experience..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit Review</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER SECTION -->
+<footer class="footer-section">
+  <div class="container">
+    <div class="row">
+      
+      <div class="col-md-4 footer-col">
+        <h3>Ooty Feeds</h3>
+        <p>Your local guide to exploring Ooty — sightseeing, stays, food, and everything in between.</p>
+      </div>
+
+      <div class="col-md-3 footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#discover">Discover Ooty</a></li>
+          <li><a href="#stays">Stays</a></li>
+          <li><a href="#services">Services</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3 footer-col">
+        <h4>Services</h4>
+        <ul class="footer-links">
+          <li><a href="#services">Sightseeing Tours</a></li>
+          <li><a href="#services">Cab Services</a></li>
+          <li><a href="#services">Toy Train</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-2 footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li>📍 Elk Hill Rd, Ooty</li>
+          <li>📱 +91 99426 97002</li>
+          <li>✉️ hh7899@gmail.com</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#discover">Discover Ooty</a></li>
+            <li><a href="#stay">Stays</a></li>
+            <li><a href="#services">Services</a></li>
+          </ul>
+        </div>
+
+        <!-- Services -->
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#services">Sightseeing Tours</a></li>
+            <li><a href="#services">Cab Services</a></li>
+            <li><a href="#services">Toy Train</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact (Dynamic) -->
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li>📍 {{ contact_info.full_address }}</li>
+            <li>📞 {{ contact_info.phone_numbers }}</li>
+            <li>✉️ {{ contact_info.email }}</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Ooty Feeds. All rights reserved.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP BUTTON (Dynamic) -->
+  <a href="https://api.whatsapp.com/send?phone={{ contact_info.whatsapp_number }}&text={{ contact_info.whatsapp_message | urlencode }}" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+    <i class="bi bi-whatsapp"></i>
+  </a>
+
+  <!-- Bootstrap JS & Custom JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

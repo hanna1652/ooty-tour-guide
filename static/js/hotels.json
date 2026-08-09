@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "name": "Savoy - IHCL SeleQtions",
+    "category": "Heritage Luxury",
+    "image_filename": "hotel5.jpeg",
+    "description": "An iconic 19th-century luxury heritage hotel surrounded by manicured gardens and English charm.",
+    "price_range": "₹12,000 - ₹25,000 / night",
+    "location": "Near Assembly Rooms, Ooty",
+    "rating": "4.8",
+    "amenities": ["Spa", "Free WiFi", "Restaurant", "Bar"],
+    "featured": true
+  }
+]

@@ -1,0 +1,59 @@
+[
+    {
+        "id": 1785732410,
+        "name": "Doddabetta Peak",
+        "category": "Viewpoints",
+        "image_filename": "dodabetta2.jpeg",
+        "description": "The highest peak in the Nilgiris at 2637 metres, offering panoramic views of the surrounding hills and valleys.",
+        "badges": [
+            "\ud83d\udcf7 Photography"
+        ],
+        "featured": false,
+        "best_time": "October to March",
+        "entry_fee": "\u20b930 per person",
+        "distance": "8 km from Ooty town",
+        "opening_hours": "7 AM to 6 PM"
+    },
+    {
+        "id": 1786109526,
+        "name": "Avalanche Lake",
+        "category": "Lakes",
+        "image_filename": "avalanche1.jpeg",
+        "description": "A heavenly lake surrounded by lush green mountains and dense forests in Ooty.",
+        "badges": [
+            "\ud83d\udcf7 Photography",
+            "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67 Family"
+        ],
+        "featured": false,
+        "best_time": "October to March",
+        "entry_fee": "Free / Safari fee applies",
+        "distance": "28 km from Ooty town",
+        "opening_hours": "8 AM to 3 PM"
+    },
+    {
+        "id": 1786116910,
+        "name": "Pine Forest",
+        "category": "Hidden Gems",
+        "description": "Pine Forest",
+        "best_time": "",
+        "entry_fee": "",
+        "distance": "",
+        "opening_hours": "",
+        "featured": false,
+        "image_filename": "8.jpeg",
+        "badges": []
+    },
+    {
+        "id": 1786264855,
+        "name": "Horticulture Karnataka Park",
+        "category": "Parks & Gardens",
+        "description": "Karnataka Gardern",
+        "best_time": "",
+        "entry_fee": "",
+        "distance": "",
+        "opening_hours": "",
+        "featured": false,
+        "image_filename": "karnataka-garden.jpeg",
+        "badges": []
+    }
+]

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Keep default JSON structures, but avoid overwriting live data
+# credentials.json

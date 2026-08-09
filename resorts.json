@@ -1,0 +1,23 @@
+[
+    {
+        "id": 2,
+        "name": "Hotel 1",
+        "category": "Heritage Luxury",
+        "description": "Hotel 1",
+        "rating": "",
+        "price_range": "",
+        "image_filename": "WhatsApp Image 2026-07-19 at 9.03.08 PM.jpeg"
+    },
+    {
+        "id": 1786267023,
+        "name": "Hotel 2",
+        "category": "Homestay & Villa",
+        "description": "Hotel 2",
+        "rating": "",
+        "price_range": "",
+        "location": "",
+        "featured": false,
+        "amenities": [],
+        "image_filename": "hotel4.jpeg"
+    }
+]

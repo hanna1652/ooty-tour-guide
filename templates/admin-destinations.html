@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destinations — Ooty Feeds Admin</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #f6f2e9;
+      --sidebar-bg: #142720;
+      --sidebar-accent: #c9a05c;
+      --sidebar-text: #f6f2e9;
+      --card-bg: #ffffff;
+      --text-dark: #142720;
+      --text-muted: #5a6a5e;
+      --border-color: rgba(31, 58, 46, 0.12);
+    }
+
+    body {
+      background-color: var(--bg-main);
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+    }
+
+    .sidebar {
+      background: var(--sidebar-bg);
+      min-height: 100vh;
+      padding: 32px 24px;
+      position: fixed;
+      width: 260px;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    }
+
+    .sidebar h2 {
+      color: var(--sidebar-accent);
+      font-family: 'Fraunces', serif;
+      font-size: 1.35rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar p {
+      color: #aec2af;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      font-weight: 400;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar a:hover {
+      background: rgba(246, 242, 233, 0.08);
+      color: var(--sidebar-accent);
+      transform: translateX(3px);
+    }
+
+    .sidebar a.active {
+      background: rgba(201, 160, 92, 0.18);
+      color: var(--sidebar-accent);
+      font-weight: 500;
+    }
+
+    .sidebar .logout {
+      margin-top: 50px;
+      color: #f87171;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      padding: 48px 40px;
+      max-width: 1200px;
+    }
+
+    .page-title {
+      font-family: 'Fraunces', serif;
+      color: var(--text-dark);
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .page-sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 36px;
+    }
+
+    .add-form-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 36px;
+      margin-bottom: 44px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(20, 39, 32, 0.05);
+    }
+
+    .add-form-card h4 {
+      font-family: 'Fraunces', serif;
+      color: var(--text-dark);
+      font-size: 1.25rem;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-label {
+      color: var(--text-dark);
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .form-control, .form-select {
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      background-color: #faf8f5;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      background-color: #ffffff;
+      border-color: var(--sidebar-accent);
+      box-shadow: 0 0 0 3px rgba(201, 160, 92, 0.15);
+    }
+
+    input[type="file"]::file-selector-button {
+      background: var(--sidebar-bg);
+      color: #ffffff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin-right: 10px;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+
+    .badges-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .badge-check {
+      background: #faf8f5;
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .badge-check label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .btn-submit-custom {
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      border: none;
+      padding: 12px 32px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .dest-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 22px 26px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dest-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dest-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge-tag {
+      background: #f0ebe0;
+      color: var(--text-dark);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+    }
+
+    .featured-tag {
+      background: var(--sidebar-accent);
+      color: #142720;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>🌿 Ooty Feeds</h2>
+    <p>Admin Workspace</p>
+    <a href="/admin">🏠 Dashboard</a>
+    <a href="/admin/destinations" class="active">📍 Destinations</a>
+    <a href="/admin/hotels">🏨 Hotels & Resorts</a>
+    <a href="/admin/messages">📩 Messages</a>
+    <a href="/admin/settings">⚙️ Account Settings</a>
+    <a href="/admin/logout" style="color: #ef4444; margin-top: 20px;">🚪 Logout</a>
+  </div>
+
+  <div class="main-content">
+    <h2 class="page-title">📍 Destinations</h2>
+    <p class="page-sub">Add and manage tourist destinations shown on your website.</p>
+
+    <div class="add-form-card">
+      <h4>➕ Add New Destination</h4>
+      <form method="POST" action="/admin/destinations" enctype="multipart/form-data">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Place Name *</label>
+            <input type="text" name="name" class="form-control" placeholder="e.g. Doddabetta Peak" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Upload Image *</label>
+            <input type="file" name="image" class="form-control" accept="image/*" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Category *</label>
+            <select name="category" class="form-select" required>
+              <option value="">Select category</option>
+              <option>Tea Estates</option>
+              <option>Lakes</option>
+              <option>Viewpoints</option>
+              <option>Waterfalls</option>
+              <option>Parks & Gardens</option>
+              <option>Museums</option>
+              <option>Hidden Gems</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Best Time to Visit</label>
+            <input type="text" name="best_time" class="form-control" placeholder="e.g. October to March">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Description *</label>
+            <textarea name="description" class="form-control" rows="3" placeholder="Write a short, engaging description..." required></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Entry Fee</label>
+            <input type="text" name="entry_fee" class="form-control" placeholder="e.g. ₹30 per person / Free">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Distance from Town</label>
+            <input type="text" name="distance" class="form-control" placeholder="e.g. 8 km from Ooty town">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Opening Hours</label>
+            <input type="text" name="opening_hours" class="form-control" placeholder="e.g. 7 AM – 6 PM">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Badges</label>
+            <div class="badges-group">
+              <div class="badge-check"><input type="checkbox" name="badges" value="👨‍👩‍👧 Family" id="b1"><label for="b1">👨‍👩‍👧 Family</label></div>
+              <div class="badge-check"><input type="checkbox" name="badges" value="❤️ Couples" id="b2"><label for="b2">❤️ Couples</label></div>
+              <div class="badge-check"><input type="checkbox" name="badges" value="📷 Photography" id="b3"><label for="b3">📷 Photography</label></div>
+              <div class="badge-check"><input type="checkbox" name="badges" value="🚶 Easy Walk" id="b4"><label for="b4">🚶 Easy Walk</label></div>
+              <div class="badge-check"><input type="checkbox" name="badges" value="🌄 Sunrise" id="b6"><label for="b6">🌄 Sunrise</label></div>
+            </div>
+          </div>
+          <div class="col-12 mt-3">
+            <div class="form-check">
+              <input type="checkbox" name="featured" id="featured" class="form-check-input">
+              <label for="featured" class="form-check-label">⭐ Mark as Featured Destination</label>
+            </div>
+          </div>
+          <div class="col-12 mt-4">
+            <button type="submit" class="btn-submit-custom">Add Destination</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <h4 style="font-family:'Fraunces', serif; color:var(--text-dark); margin-bottom:20px;">
+      All Destinations ({{ destinations|length if destinations else 0 }})
+    </h4>
+
+    {% if destinations %}
+      {% for dest in destinations %}
+      <div class="dest-card">
+        <div>
+          <div class="dest-name">
+            {{ dest.name }}
+            {% if dest.featured %}<span class="featured-tag">⭐ Featured</span>{% endif %}
+          </div>
+          <div class="dest-meta">
+            <span class="badge-tag">{{ dest.category }}</span>
+            <span class="badge-tag">🖼️ {{ dest.image_filename }}</span>
+            {% if dest.badges %}
+              {% for badge in dest.badges %}
+              <span class="badge-tag">{{ badge }}</span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+        <a href="/admin/destinations/delete/{{ dest.id }}" class="btn-delete" onclick="return confirm('Delete {{ dest.name }}?')">🗑 Delete</a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align:center; padding:48px; background:var(--card-bg); border-radius:16px; border:1px solid var(--border-color); color:var(--text-muted);">
+        No destinations found. Add your first destination above!
+      </div>
+    {% endif %}
+
+  </div>
+
+</body>
+</html>
