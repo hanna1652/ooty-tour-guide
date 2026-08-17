@@ -391,6 +391,10 @@ def delete_review(review_id):
     flash('Review deleted successfully!', 'success')
     return redirect(url_for('admin_reviews'))
 
+@app.route('/googleafecd3723199f7ac.html')
+def google_verification():
+    return app.send_static_file('googleafecd3723199f7ac.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, port=5000)
