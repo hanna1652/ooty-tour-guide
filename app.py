@@ -403,6 +403,10 @@ def google_verification():
 def robots():
     return "User-agent: *\nAllow: /"
 
+@app.route('/robots.txt')
+def robots():
+    return "User-agent: *\nAllow: /", 200, {'Content-Type': 'text/plain'}
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, port=5000)
