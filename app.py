@@ -399,10 +399,6 @@ def delete_review(review_id):
 def google_verification():
     return "google-site-verification: googleafecd3723199f7ac.html"
 
-    @app.route('/robots.txt')
-def robots():
-    return "User-agent: *\nAllow: /"
-
 @app.route('/robots.txt')
 def robots():
     return "User-agent: *\nAllow: /", 200, {'Content-Type': 'text/plain'}
