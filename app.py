@@ -399,6 +399,10 @@ def delete_review(review_id):
 def google_verification():
     return "google-site-verification: googleafecd3723199f7ac.html"
 
+    @app.route('/robots.txt')
+def robots():
+    return "User-agent: *\nAllow: /"
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, port=5000)
