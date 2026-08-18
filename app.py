@@ -2,7 +2,7 @@ import os
 import time
 from functools import wraps
 from bson.objectid import ObjectId
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, Response, flash, redirect, render_template, request, session, url_for
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 
@@ -393,17 +393,18 @@ def delete_review(review_id):
 
 
 # ---------------------------------------------------------
-# GOOGLE SITE VERIFICATION ROUTE
+# GOOGLE SITE VERIFICATION & ROBOTS ROUTE
 # ---------------------------------------------------------
 @app.route('/googleafecd3723199f7ac.html')
 def google_verification():
     return "google-site-verification: googleafecd3723199f7ac.html"
 
-from flask import send_from_directory
 
 @app.route('/robots.txt')
 def robots():
-    return send_from_directory('static', 'robots.txt')
+    content = "User-agent: *\nAllow: /\n"
+    return Response(content, mimetype='text/plain')
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, port=5000)
