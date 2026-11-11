@@ -7,7 +7,9 @@ from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.secret_key = 'ooty_feeds_secret_key'  # Needed for flash messages & sessions
+app.secret_key = os.environ.get('FLASK_SECRET_KEY')
+if not app.secret_key:
+    raise RuntimeError('FLASK_SECRET_KEY environment variable is required.')
 
 # Directory setup for uploaded images
 UPLOAD_FOLDER = os.path.join('static', 'images')
@@ -17,11 +19,9 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # ---------------------------------------------------------
 # MONGODB ATLAS CONFIGURATION
 # ---------------------------------------------------------
-# Replace <db_password> with your actual database user password
-MONGO_URI = os.environ.get(
-    'MONGO_URI',
-    'mongodb+srv://hh7158798_db_user:OotyPass123@ooty-feeds.0grjfne.mongodb.net/?appName=Ooty-feeds',
-)
+MONGO_URI = os.environ.get('MONGO_URI')
+if not MONGO_URI:
+    raise RuntimeError('MONGO_URI environment variable is required.')
 
 client = MongoClient(MONGO_URI)
 db = client['ooty_feeds_db']
@@ -33,6 +33,8 @@ reviews_col = db['reviews']
 messages_col = db['messages']
 credentials_col = db['credentials']
 contact_col = db['contact']
+real_estate_col = db['real_estate']
+transport_col = db['transportation']
 
 
 # ---------------------------------------------------------
@@ -64,12 +66,20 @@ def save_contact_info(contact_data):
 
 
 def get_admin_credentials():
-    default_creds = {'username': 'admin', 'password': 'password123'}
     creds = credentials_col.find_one()
-    if not creds:
-        credentials_col.insert_one(default_creds)
-        return default_creds
-    return creds
+    if creds:
+        return creds
+
+    default_creds = {
+        'username': os.environ.get('ADMIN_USERNAME'),
+        'password': os.environ.get('ADMIN_PASSWORD'),
+    }
+    if not all(default_creds.values()):
+        raise RuntimeError(
+            'Set ADMIN_USERNAME and ADMIN_PASSWORD before the first admin login.'
+        )
+    credentials_col.insert_one(default_creds)
+    return default_creds
 
 
 def save_admin_credentials(creds):
@@ -98,12 +108,16 @@ def home():
     hotels = list(resorts_col.find())
     reviews = list(reviews_col.find())
     contact_info = get_contact_info()
+    real_estate = list(real_estate_col.find())
+    transportation = list(transport_col.find())
     return render_template(
         'index.html',
         destinations=destinations,
         hotels=hotels,
         reviews=reviews,
         contact_info=contact_info,
+        real_estate=real_estate,
+        transportation=transportation,
     )
 
 
@@ -262,12 +276,16 @@ def admin_dashboard():
     destinations_count = destinations_col.count_documents({})
     hotels_count = resorts_col.count_documents({})
     messages_count = messages_col.count_documents({})
+    real_estate_count = real_estate_col.count_documents({})
+    transport_count = transport_col.count_documents({})
 
     return render_template(
         'admin-dashboard.html',
         destinations_count=destinations_count,
         hotels_count=hotels_count,
         messages_count=messages_count,
+        real_estate_count=real_estate_count,
+        transport_count=transport_count,
     )
 
 
@@ -354,6 +372,83 @@ def delete_hotel(hotel_id):
         resorts_col.delete_one({'id': int(hotel_id)})
     flash('Hotel deleted successfully!', 'success')
     return redirect(url_for('admin_hotels'))
+
+
+
+# ---------------------------------------------------------
+# REAL ESTATE & TRANSPORTATION MANAGEMENT
+# ---------------------------------------------------------
+def save_listing_image(file):
+    """Save an uploaded listing image using a unique, safe filename."""
+    if not file or not file.filename:
+        return ''
+    filename = f"uploaded_{time.time_ns()}_{secure_filename(file.filename)}"
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return filename
+
+
+@app.route('/admin/real-estate', methods=['GET', 'POST'])
+@login_required
+def admin_real_estate():
+    if request.method == 'POST':
+        new_property = {
+            'title': (request.form.get('title') or '').strip(),
+            'listing_type': (request.form.get('listing_type') or '').strip(),
+            'property_type': (request.form.get('property_type') or '').strip(),
+            'price': (request.form.get('price') or '').strip(),
+            'location': (request.form.get('location') or '').strip(),
+            'description': (request.form.get('description') or '').strip(),
+            'contact_no': (request.form.get('contact_no') or '').strip(),
+            'image_filename': save_listing_image(request.files.get('image')),
+        }
+        real_estate_col.insert_one(new_property)
+        flash('Property added successfully!', 'success')
+        return redirect(url_for('admin_real_estate'))
+
+    properties = list(real_estate_col.find())
+    return render_template('admin-real-estate.html', properties=properties)
+
+
+@app.route('/admin/real-estate/delete/<string:prop_id>')
+@login_required
+def delete_real_estate(prop_id):
+    if ObjectId.is_valid(prop_id):
+        real_estate_col.delete_one({'_id': ObjectId(prop_id)})
+    elif prop_id.isdigit():
+        real_estate_col.delete_one({'id': int(prop_id)})
+    flash('Property deleted successfully!', 'success')
+    return redirect(url_for('admin_real_estate'))
+
+
+@app.route('/admin/transportation', methods=['GET', 'POST'])
+@login_required
+def admin_transportation():
+    if request.method == 'POST':
+        new_vehicle = {
+            'vehicle_name': (request.form.get('vehicle_name') or '').strip(),
+            'category': (request.form.get('category') or '').strip(),
+            'fuel_type': (request.form.get('fuel_type') or '').strip(),
+            'price_rate': (request.form.get('price_rate') or '').strip(),
+            'contact_no': (request.form.get('contact_no') or '').strip(),
+            'image_filename': save_listing_image(request.files.get('image')),
+        }
+        transport_col.insert_one(new_vehicle)
+        flash('Vehicle added successfully!', 'success')
+        return redirect(url_for('admin_transportation'))
+
+    vehicles = list(transport_col.find())
+    return render_template('admin-transportation.html', vehicles=vehicles)
+
+
+@app.route('/admin/transportation/delete/<string:trans_id>')
+@login_required
+def delete_transportation(trans_id):
+    if ObjectId.is_valid(trans_id):
+        transport_col.delete_one({'_id': ObjectId(trans_id)})
+    elif trans_id.isdigit():
+        transport_col.delete_one({'id': int(trans_id)})
+    flash('Vehicle deleted successfully!', 'success')
+    return redirect(url_for('admin_transportation'))
 
 
 @app.route('/admin/messages')
