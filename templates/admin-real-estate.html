@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Real Estate — Ooty Feeds</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-dark" style="background:#1f3a2e">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">Ooty Feeds · Admin</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-light btn-sm" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a class="btn btn-danger btn-sm" href="{{ url_for('admin_logout') }}">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container py-4">
+    <h1 class="h3 mb-4">Real Estate Listings</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-header fw-semibold">Add Property</div>
+          <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+              <label class="form-label">Property title</label>
+              <input class="form-control mb-3" name="title" required>
+              <label class="form-label">Listing type</label>
+              <select class="form-select mb-3" name="listing_type" required>
+                <option value="For Sale">For Sale</option><option value="For Rent">For Rent</option>
+              </select>
+              <label class="form-label">Property type</label>
+              <select class="form-select mb-3" name="property_type" required>
+                <option>Land</option><option>Villa / Cottage</option><option>House</option><option>Commercial</option><option>Farm / Estate</option>
+              </select>
+              <label class="form-label">Price</label>
+              <input class="form-control mb-3" name="price" required>
+              <label class="form-label">Location</label>
+              <input class="form-control mb-3" name="location" required>
+              <label class="form-label">Description</label>
+              <textarea class="form-control mb-3" name="description" rows="3"></textarea>
+              <label class="form-label">Contact number (with country code)</label>
+              <input class="form-control mb-3" name="contact_no" placeholder="+91...">
+              <label class="form-label">Property image</label>
+              <input class="form-control mb-3" type="file" name="image" accept="image/*">
+              <button class="btn btn-success w-100" type="submit">Add Property</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <div class="card shadow-sm">
+          <div class="card-header fw-semibold">Current Properties</div>
+          <div class="card-body table-responsive">
+            <table class="table align-middle">
+              <thead><tr><th>Property</th><th>Price</th><th>Location</th><th></th></tr></thead>
+              <tbody>
+                {% for item in properties %}
+                  <tr>
+                    <td>{{ item.title }}<div class="small text-muted">{{ item.property_type }} · {{ item.listing_type }}</div></td>
+                    <td>{{ item.price }}</td><td>{{ item.location }}</td>
+                    <td><a class="btn btn-outline-danger btn-sm" href="{{ url_for('delete_real_estate', prop_id=item._id) }}" onclick="return confirm('Delete this property?')">Delete</a></td>
+                  </tr>
+                {% else %}
+                  <tr><td colspan="4" class="text-center text-muted">No property listings yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
