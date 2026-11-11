@@ -189,6 +189,116 @@
     </div>
   </section>
 
+  
+  <!-- REAL ESTATE & TRANSPORTATION -->
+  <section class="stay-section" id="real-estate-and-travel">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-eyebrow">Property & Travel</p>
+        <h2>Real Estate & <em>Transportation</em></h2>
+        <p class="section-sub">Browse property opportunities and vehicle rentals around the Nilgiris.</p>
+      </div>
+      <div class="stay-grid">
+        <div class="stay-card">
+          <div class="stay-card-content">
+            <h3>Plots, Cottages & Lands</h3>
+            <p>Explore property listings in Ooty and nearby Nilgiri locations.</p>
+            <button type="button" class="btn-enquire" data-bs-toggle="modal" data-bs-target="#realEstateModal">
+              <i class="bi bi-building"></i> View Properties ({{ real_estate|length if real_estate else 0 }})
+            </button>
+          </div>
+        </div>
+        <div class="stay-card">
+          <div class="stay-card-content">
+            <h3>Cars, Bikes & Cabs</h3>
+            <p>Find vehicle options for local travel and sightseeing.</p>
+            <button type="button" class="btn-enquire" data-bs-toggle="modal" data-bs-target="#transportModal">
+              <i class="bi bi-car-front"></i> View Vehicles ({{ transportation|length if transportation else 0 }})
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROPERTY LISTINGS MODAL -->
+  <div class="modal fade" id="realEstateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content stay-modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title fs-5">Real Estate Properties in Ooty</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {% if real_estate %}
+            <div class="row g-4">
+              {% for item in real_estate %}
+                <div class="col-md-6">
+                  <div class="card h-100">
+                    {% if item.image_filename %}
+                      <img src="{{ url_for('static', filename='images/' ~ item.image_filename) }}" class="card-img-top" alt="{{ item.title }}" style="height:220px;object-fit:cover;">
+                    {% endif %}
+                    <div class="card-body">
+                      <h5 class="card-title">{{ item.title }}</h5>
+                      <p class="mb-1"><strong>{{ item.property_type }}</strong> · {{ item.listing_type }}</p>
+                      <p class="mb-1">{{ item.location }}</p>
+                      <p class="fw-semibold">{{ item.price }}</p>
+                      <p>{{ item.description }}</p>
+                      <a class="btn-enquire" target="_blank" rel="noopener noreferrer"
+                         href="https://api.whatsapp.com/send?phone={{ (item.contact_no or contact_info.whatsapp_number)|replace('+','') }}&text=Hi!%20I'm%20interested%20in%20{{ item.title|urlencode }}.">
+                        <i class="bi bi-whatsapp"></i> Enquire Property
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-center py-4">No property listings available right now. Please contact us for details.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSPORTATION LISTINGS MODAL -->
+  <div class="modal fade" id="transportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content stay-modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title fs-5">Transportation & Vehicles in Ooty</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {% if transportation %}
+            <div class="row g-4">
+              {% for vehicle in transportation %}
+                <div class="col-md-6">
+                  <div class="card h-100">
+                    {% if vehicle.image_filename %}
+                      <img src="{{ url_for('static', filename='images/' ~ vehicle.image_filename) }}" class="card-img-top" alt="{{ vehicle.vehicle_name }}" style="height:200px;object-fit:cover;">
+                    {% endif %}
+                    <div class="card-body">
+                      <h5 class="card-title">{{ vehicle.vehicle_name }}</h5>
+                      <p class="mb-1">{{ vehicle.category }} · {{ vehicle.fuel_type }}</p>
+                      <p class="fw-semibold">{{ vehicle.price_rate }}</p>
+                      <a class="btn-enquire" target="_blank" rel="noopener noreferrer"
+                         href="https://api.whatsapp.com/send?phone={{ (vehicle.contact_no or contact_info.whatsapp_number)|replace('+','') }}&text=Hi!%20I'm%20interested%20in%20renting%20{{ vehicle.vehicle_name|urlencode }}.">
+                        <i class="bi bi-whatsapp"></i> Rent / Book Vehicle
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-center py-4">No vehicles listed currently. Please contact us for options.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SERVICES SECTION -->
   <section class="services-section" id="services">
     <div class="container">
