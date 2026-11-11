@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Transportation — Ooty Feeds</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-dark" style="background:#1f3a2e">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">Ooty Feeds · Admin</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-light btn-sm" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a class="btn btn-danger btn-sm" href="{{ url_for('admin_logout') }}">Logout</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container py-4">
+    <h1 class="h3 mb-4">Transportation Listings</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card shadow-sm">
+          <div class="card-header fw-semibold">Add Vehicle</div>
+          <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+              <label class="form-label">Vehicle name / model</label>
+              <input class="form-control mb-3" name="vehicle_name" required>
+              <label class="form-label">Category</label>
+              <select class="form-select mb-3" name="category" required>
+                <option>Car</option><option>Bike</option><option>Cab</option><option>Van</option><option>Other</option>
+              </select>
+              <label class="form-label">Fuel type</label>
+              <input class="form-control mb-3" name="fuel_type">
+              <label class="form-label">Price / rate</label>
+              <input class="form-control mb-3" name="price_rate" placeholder="e.g. ₹1,000 / day">
+              <label class="form-label">Contact number (with country code)</label>
+              <input class="form-control mb-3" name="contact_no" placeholder="+91...">
+              <label class="form-label">Vehicle image</label>
+              <input class="form-control mb-3" type="file" name="image" accept="image/*">
+              <button class="btn btn-success w-100" type="submit">Add Vehicle</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-header fw-semibold">Current Vehicles</div>
+          <div class="card-body table-responsive">
+            <table class="table align-middle">
+              <thead><tr><th>Vehicle</th><th>Category</th><th>Rate</th><th></th></tr></thead>
+              <tbody>
+                {% for vehicle in vehicles %}
+                  <tr>
+                    <td>{{ vehicle.vehicle_name }}</td><td>{{ vehicle.category }}</td><td>{{ vehicle.price_rate }}</td>
+                    <td><a class="btn btn-outline-danger btn-sm" href="{{ url_for('delete_transportation', trans_id=vehicle._id) }}" onclick="return confirm('Delete this vehicle?')">Delete</a></td>
+                  </tr>
+                {% else %}
+                  <tr><td colspan="4" class="text-center text-muted">No vehicles listed yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
